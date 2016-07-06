@@ -7,7 +7,7 @@ import qualified Data.Set as S
 import Identifiers (RoomID)
 import Time (RawCD)
 
-type PrintDesc = String
+type Description = View String
 
 data Room = Room
   { roomName :: String
@@ -17,8 +17,9 @@ data Room = Room
 }
   
 data Door = Door
-  { doorName :: String
-  , doorTarget :: RoomID
+  { dName :: String
+  , dTarget :: RoomID
+  , 
   }
   deriving (Ord, Eq)
 

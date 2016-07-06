@@ -7,12 +7,6 @@ import Data.Int (Int64)
 newtype RoomID = RoomID String
   deriving (Ord, Eq, Show, Read)
 
-data Location = Location { locRoom :: RoomID, locCover :: Maybe RoomID }
-  deriving (Ord, Eq, Read, Show)
-
-noCover :: RoomID -> Location
-noCover rID = Location rID Nothing
-
 data ActorID = ActorID Int64
   deriving (Ord, Eq, Read, Show)
 
@@ -24,13 +18,13 @@ newtype Target = Target ActorID
 
 brother, sister, captain, doctor, professor :: ActorID
 suitor, virus, rival, friend, guardian :: ActorID
-brother   = ActorID $ 623466054
-sister    = ActorID $ 339290775
-captain   = ActorID $ 184309082
-doctor    = ActorID $ -61835295
-professor = ActorID $ 807786217
-suitor    = ActorID $ 363340126
-virus     = ActorID $  22697100
-rival     = ActorID $  74073028
-friend    = ActorID $ 564407982
-guardian  = ActorID $ 576939762
+unsaved_buffer  = ActorID $ 623466054
+stove_dot       = ActorID $ 339290775
+captain_desoto  = ActorID $ 184309082
+doctor_cranston = ActorID $ -61835295
+professor_dan   = ActorID $ 807786217
+anonymous       = ActorID $ 363340126
+penguin         = ActorID $  22697100
+katy_mcgane     = ActorID $  74073028
+kevin_mkII      = ActorID $ 564407982
+phoebe          = ActorID $ 576939762

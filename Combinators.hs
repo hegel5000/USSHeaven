@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wall #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Combinators where
 
@@ -134,6 +135,11 @@ longZip ass [] = ass
 
 condDo :: (Monad m) => Bool -> m () -> m ()
 condDo cond m = if cond then m else return ()
+
+ifM :: (Monad m) => m Bool -> m a -> m a -> m a
+ifM pred then_ else_ = pred >>= \case
+  True -> then_
+  False -> else_
 
 tpl23of3 :: (a, b, c) -> (b, c)
 tpl23of3 (_, b, c) = (b, c)

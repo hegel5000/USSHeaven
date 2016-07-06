@@ -1,0 +1,4 @@
+.cabal-sandbox/*
+.hg/*
+.hgignore
+cabal.sandbox.config

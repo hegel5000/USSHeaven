@@ -4,4 +4,5 @@ import WorldTemplate (ship)
 
 main :: IO ()
 main = go
-  1
+  where
+    go = ask 

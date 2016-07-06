@@ -8,13 +8,14 @@ import qualified Data.Set as S
 import qualified SetMap as SM
 
 import Control.Monad (foldM, liftM2)
-import Control.Monad.Reader (ask, Reader)
+import Control.Monad.Reader (ask)
 import Data.Functor ()
 import Data.Maybe ()
 
 import Combinators (makeSafe)
 import Delta (Delta)
 import Identifiers (RoomID, Location(Location, locRoom), ActorID)
+import Monads (View)
 import Room (Room(rDoors, roomName), Door(doorTarget))
 import Sheet (getCD, Sheet(actorName))
 import Time (CDType, Date)
@@ -23,8 +24,6 @@ import World (aIDToRoomUNSAFE, noAIDerror, getRoomUNSAFE
   )
 --
 --I might try Lenses at some point, though.
-
-type View = Reader World
 
 worldV :: View World
 worldV = ask
