@@ -9,29 +9,17 @@ import Combinators (fi)
 import Stat ( Stat, printActorName, ActorName, ActorArchitecture, DmgType, Defense, WpnType
   , ConditionsBlock, StatName(..), statVal, unWounded, toDefense
   )
-import Time(CDType(..))
+import Time(CDType(..), RawCD)
 
 data Sheet = Sheet
-  { actorName :: ActorName
-  , uArch :: ActorArchitecture
+  { sName :: String
+  , cdPhys, cdPSI :: RawCD
+  , aggression, design,     technique,    grace,    efficiency
+  , beauty,     willpower,  friendliness  security, intelligence
+  , humanity, shield, proxy, energy, psi :: Stat 
+  } deriving (Ord, Eq, Show, Read)
 
-  , aggression, beauty
-  , design,     willpower
-  , technique,  friendliness
-  , grace,      security
-  , efficiency, intelligence
-  , energy,   psi
-  , shield, proxy
-  , humanity
-  :: Stat
-
-  , absorptions, defs :: M.Map DmgType Defense
-  , skls :: M.Map WpnType Stat
-
-  , conditions :: ConditionsBlock
-  
-  , cdPhys, cdPSI :: Double
-} deriving (Ord, Eq, Show, Read)
+data StatBlock = Fixed | Growth
 
 editStat :: StatName -> (Stat -> Stat) -> Sheet -> Sheet
 editStat sn toStat sheet = setStat sn (toStat $ getStat sn sheet) sheet
@@ -48,7 +36,7 @@ getStat :: StatName -> Sheet -> Stat
 getStat sn = case sn of
   AGG -> aggression;  DES -> design;    TEC -> technique;    GRA -> grace;    EFF -> efficiency
   BEA -> beauty;      WIL -> willpower; FRI -> friendliness; SEC -> security; INT -> intelligence
-  HUM -> humanity; PSI -> psi; NRG -> energy
+  HUM -> humanity; REF -> Reflect; PRO -> proxy ; CAP -> capacitor; PSY -> psyche
 
 getCD :: CDType -> Sheet -> Double
 getCD CDPhys = cdPhys
@@ -115,4 +103,3 @@ fromTemplate name ut = U
   M.empty
   --
   1.00 1.00
-

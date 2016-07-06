@@ -95,12 +95,6 @@ data WpnType =
   | Psychic
   deriving (Ord, Eq, Show, Read)
 
-data StatName = 
-    AGG | DES | TEC | GRA | EFF
-  | BEA | WIL | FRI | SEC | INT
-  | HUM | PSI | NRG
-  deriving (Ord, Eq, Show, Read)
-
 type ConditionsBlock = M.Map Condition Integer
 
 data Condition = 
