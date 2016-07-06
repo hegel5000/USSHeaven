@@ -9,13 +9,9 @@ import Combinators (fi)
 import Stat ( Stat, printActorName, ActorName, ActorArchitecture, DmgType, Defense, WpnType
   , ConditionsBlock, StatName(..), statVal, unWounded, toDefense
   )
-import Time(CDType(..)) 
+import Time(CDType(..))
 
-
-getPrtUName :: Sheet -> String
-getPrtUName = printActorName . actorName
-
-data Sheet = U
+data Sheet = Sheet
   { actorName :: ActorName
   , uArch :: ActorArchitecture
 
@@ -24,8 +20,9 @@ data Sheet = U
   , technique,  friendliness
   , grace,      security
   , efficiency, intelligence
-  , humanity,   psi
-  , energy
+  , energy,   psi
+  , shield, proxy
+  , humanity
   :: Stat
 
   , absorptions, defs :: M.Map DmgType Defense

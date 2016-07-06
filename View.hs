@@ -8,7 +8,7 @@ import qualified Data.Set as S
 import qualified SetMap as SM
 
 import Control.Monad (foldM, liftM2)
-import Control.Monad.Reader (ask)
+import Control.Monad.Reader (ask, Reader)
 import Data.Functor ()
 import Data.Maybe ()
 
@@ -22,8 +22,8 @@ import Time (CDType, Date)
 import World (aIDToRoomUNSAFE, noAIDerror, getRoomUNSAFE
   , meleeTargets , aDeref, PCData (PC), World (pcDataMap, aIDToLoc, date, deltas)
   )
---
---I might try Lenses at some point, though.
+
+type View = Reader World
 
 worldV :: View World
 worldV = ask

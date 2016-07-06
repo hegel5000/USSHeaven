@@ -2,70 +2,38 @@
 
 module WorldTemplate where
 
-type TempRoomID
+import Identifiers (ActorID)
+import Room (Room)
+import Sheet (Sheet)
+import World (World)
 
-type WorldTemplate  = [(Room, [ActorID])] 
-type RoomTemplate   = (TempRoomID, Size, Description, [DoorTemplate RoomID]) 
-type DoorTemplate   = (DoorName, TempRoomID, Description)
+type WorldTemplate = [(RoomTemplate, [ActorTemplate])]
+type RoomTemplate = (String, Double, String, [DoorTemplate])
+type DoorTemplate = (String, String)
+type ActorTemplate = Sheet
 
-lit :: String -> View String
-lit = return
+bake :: String -> WorldTemplate -> World
+bake = 
 
-data VirtualPlazaTempRIDs = 
-    Garden | Patio | Parlor 
-  | RedCorridor | Guestroom1 | Guestroom2 | Guestroom3 | Conservatory
-  | BlueCorridor | Theater | Plaza
-  | Diningroom | Kitchen
-  | GreenCorridor | PianoRoom | Office
-  deriving Show
-
-data VirtualPlazaTempUIDs = 
-    TopiaryMenelaus | TopiaryAchilles | KevinMkIIForm1
-  deriving Show
-
-virtualPlaza :: WorldTemplate VirtualPlazaTempRIDs VirtualPlazaTempUIDs
+virtualPlaza :: WorldTemplate
 virtualPlaza = 
-  [ ( ( Garden
-      , 10.0
-      , lit "The grass and shrubs are green.  The sun is warm and pleasant."
-      , [ ( "terrace steps"
-          , Patio
-          , lit "They lead up."
-          )
+  [ ( ( "Garden", 10.0, "The grass and shrubs are green.  The sun is warm and pleasant."
+      , [ ("terrace steps up" , "Patio")
         ]
       )
     , [TopiaryMenelaus, TopiaryAchilles]
     )
-  , ( ( Patio
-      , 3.5
-      , lit "The tiles have a pleasant, sunny motif.  The sunless sky is a blue-grey."
-      , [ ( "terrace steps"
-          , Garden
-          , lit "They lead down."
-          )
-        , ( "glass door"
-          , Parlor
-          , lit "Surrounded by gently wafting curtains."
-          ) 
+  , ( ( "Patio", 3.5, "The tiles have a pleasant, sunny motif.  The sunless sky is a blue-grey."
+      , [ ("terrace steps down", "Garden")
+        , ("wafting-curtained glass door", "Parlor") 
         ]
       )
     , []
     )
-  , ( ( Parlor
-      , lit "Carpet, wallpaper, and ceiling are a sylvan green."
-      , 3.0
-      , [ ( "glass door"
-          , Patio
-          , lit "Sunlight shines through."
-          )
-        , ( "oak door"
-          , PianoRoom
-          , maybe "It's thick." (++" can be heard on the other side.") <$> pianoProbe
-          )
-          ( "pine door"
-          , Office
-          , lit "
-          )
+  , ( ( "Parlor", 3.0, "Carpet, wallpaper, and ceiling are a sylvan green."
+      , [ ("sun-streaming wafting-curtained glass door", "Patio")
+        , ("thick oak door", "Piano Room")
+          ("red pine door", "Office")
         ]
       )
     , []
