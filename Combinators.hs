@@ -143,3 +143,11 @@ ifM pred then_ else_ = pred >>= \case
 
 tpl23of3 :: (a, b, c) -> (b, c)
 tpl23of3 (_, b, c) = (b, c)
+
+mkLeft :: l -> Maybe r -> Either l r
+mkLeft l Nothing  = Left l
+mkLeft _ (Just r) = Right r
+
+rmLeft :: Either l r -> Maybe r
+rmLeft (Left _)   = Nothing
+rmLeft (Rigth r)  = Just r

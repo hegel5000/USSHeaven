@@ -4,7 +4,7 @@ module Room where
 
 import qualified Data.Set as S
 
-import Identifiers (RoomID)
+import Identifiers (Address)
 import Time (RawCD)
 
 -- |You might notice that these 'Room's don't contain 'Actor.Actor's or 'Identifiers.ActorID's.
@@ -21,10 +21,10 @@ data Room = Room
 --  Individual Door object aren't supposed to appear anywhere except in the rDoors field.
 --  A 'Door' in one 'Room' /usually/ needs a corresponding 'Door' in another room.
 --  In the world of USSHeaven, things such as security cameras or paintings on walls can act as one-way 'Door's.
---  Note that while a 'Room' directly contains 'Door's, 'Door's only reference 'Room's (through 'RoomID's).
+--  Note that while a 'Room' directly contains 'Door's, 'Door's only reference 'Room's (through 'Address's).
 data Door = Door
-  { dName :: String -- ^ Door name.  Always appears with the 'rName' of the 'Room' corresponding to 'dTarget'.
-  , dTarget :: RoomID -- ^ Corresponds to the particular 'Room' this 'Door' leads to (see 'World').
+  { dDesc :: String -- ^ Door description.  Always appears with the 'rName' of the 'Room' corresponding to 'dTarget'.
+  , dTarget :: Address -- ^ Corresponds to the particular 'Room' this 'Door' leads to (see 'World').
   }
   deriving (Ord, Eq, Show, Read)
 

@@ -2,7 +2,7 @@
 
 module WorldTemplate where
 
-import Identifiers (ActorID)
+import Identifiers (ActorID, Location)
 import Room (Room)
 import Sheet (Sheet)
 import Time (RawCD(..))
@@ -20,32 +20,52 @@ data DoorTemplate =
 type ActorTemplate = Sheet
 
 -- |'Bake' does a few things.
---  Adds the specified namespaces to 'RoomName's and switches them to 'RoomID's,
+--  Adds the specified namespaces to 'RoomName's and switches them to 'Location's,
 --    except when populating the 'rName' fields in 'Room's, 
 --    where they just become 'String's.
 --  Uses 'DoorTemplate's to generate one or two 'Door's to populate 'Room's as needed.
---  Maps generated 'RoomID's to generated 'Room's to populate the 'roomsMap' field in the output 'World'.
+--  Maps generated 'Location's to generated 'Room's to populate the 'roomsMap' field in the output 'World'.
 --  TODO: how do I generate UnitIDs?
 bake :: String -> WorldTemplate -> Either String World
-bake namespace (rooms, doors) = do
-  (actorsMap1, roomsMap1, aIDsToRIDs <- foldM (\ ac
-      -> 
-    ) M.empty rooms
-
+bake namespace (roomActTemps, doorTemps) = do
+  rooms <- foldM (\ rooms0 doorTemp -> 
+      let toLocSafe name rooms = let loc = toLoc name in if M.member loc rooms
+            then Right loc
+            else err $ "cannot find Location "++show loc++" in DoorTemplate "++show doorTemp
+          addDoor sourceName description targetName rooms 
+            = liftM2 (\ (sourceLoc, targetLoc) -> M.adjust sourceLoc (\ srcRoom 
+                -> srcRoom { rDoors = (Door description targetLoc) : rDoors srcRoom }
+              ) rooms ) (toLoc sourceName) (toLoc targetName)
+      in 
+      case doorTemp of
+        (BiDoor lName desc rName)                 -> addDoor lName desc  rName =<< addDoor rName desc  lName rooms0
+        (AssymDoor (lName, lDesc) (rName, rDesc)) -> addDoor lName lDesc rName =<< addDoor rName rDesc lName rooms0
+        (MonoDoor (lName, lDesc) rName)           -> addDoor lName lDesc rName
+    ) (foldl (\ ((name, size, desc), _) -> Room name size desc M.Empty )) doorTemps
+  (aIDs, sheets, locs) <- foldM (\ acc ((roomName, _, _), actTemps) 
+      -> foldM (\ (aIDs, sheets, locs) ({- TODO: decide on actor templates -})
+          -> liftM4 (,,)
+            (foldM aIDs actTemps)
+            (foldM () sheets)
+            (foldM () locs)
+        ) acc actTemps
+    ) (M.empty, M.empty, M.empty) roomActTemps
   Right $ World 
-    { wRooms        = roomsMap'
-    , wSheets     :: M.Map ActorID Sheet
-    , wLocations      :: M.Map ActorID RoomID
-    , wContents     :: M.Map RoomID (S.Set ActorID)
-    , date          = SinceEpoch $ NanoSeconds 0 --Party like it's 1970, January 1st!
-    , worldDie      = mkStdGen 10 --TODO: decide how USSHeaven handles saving RNG seeds.
-    , deltas        = M.empty
-    , deltasNew     = M.empty
-    , observations  = M.empty
-    , pcDataMap     = M.Empty
+    { locRoom       = rooms
+    , locActorIDs   = 
+    , locDeltas     = M.empty
+    , locDeltasNew  = M.empty
+    , actSheet      = sheets
+    , actLocation   = 
+    , actDirectors  = M.Empty
+    , gloDate       = SinceEpoch $ NanoSeconds 0 --Party like it's 1970, New Years Day!
+    , gloRng        = mkStdGen -1 --TODO: decide how USSHeaven handles saving RNG seeds.
     }
   where
-    mangle (RN roomName) = namespace++"/"roomName
+    toLoc (RN roomName) room = let loc = Location $ rnamespace++"/"roomName in
+      if M.member loc 
+    toAID = ActorID . ((rnamespace++"::")++) . sName
+    err = Left . ("WorldTemplate.bake: "++)
 
 virtualPlaza :: WorldTemplate
 virtualPlaza = 

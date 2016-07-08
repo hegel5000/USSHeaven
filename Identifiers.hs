@@ -4,7 +4,7 @@ module Identifiers where
 
 import Data.Int (Int64)
 
-newtype RoomID = RoomID String
+newtype Location = Location String
   deriving (Ord, Eq, Show, Read)
 
 data ActorID = ActorID String
